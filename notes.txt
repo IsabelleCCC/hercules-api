@@ -1,0 +1,4 @@
+Para rodar a aplicação:
+	uvicorn main:app --reload
+
+criação de fitness test dando erro
