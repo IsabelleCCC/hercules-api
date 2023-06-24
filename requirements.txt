@@ -6,3 +6,4 @@ python-dotenv==1.0.0
 python-jose==3.3.0
 SQLAlchemy==2.0.13
 uvicorn==0.21.1
+passlib==1.7.4
