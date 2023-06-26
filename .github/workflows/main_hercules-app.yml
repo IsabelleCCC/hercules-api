@@ -23,14 +23,14 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: https://index.docker.io/v1/
-        username: ${{ secrets.AzureAppService_ContainerUsername_b6da2fa6cae04e0daf248630a3a73385 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_1743fb00d6714a66b4affeedc998ca6b }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_a7f7a21732164f9783eb309ff26d4137 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_9ae8983ce6444404b56e1e8362b9ce43 }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_b6da2fa6cae04e0daf248630a3a73385 }}/hercules-image:${{ github.sha }}
+        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_a7f7a21732164f9783eb309ff26d4137 }}/hercules:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'hercules-app'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_44aac81aeb9d4b4e8eef5ddbcdd693a2 }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_b6da2fa6cae04e0daf248630a3a73385 }}/hercules-image:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_d08942de6a0648a3b2589b099eaf12f8 }}
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_a7f7a21732164f9783eb309ff26d4137 }}/hercules:${{ github.sha }}'
