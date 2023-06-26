@@ -3,7 +3,7 @@ from typing import Optional, List
 from infrastructure.repositories.exercise import ExerciseRepository
 from core.models.exercise import Exercise
 from core.schemas.exercise import ExerciseCreate, ExerciseUpdate
-from app.services.exceptions import NotFoundException
+from business.services.exceptions import NotFoundException
 
 
 class ExerciseService:

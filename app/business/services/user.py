@@ -1,7 +1,7 @@
 from infrastructure.repositories.user import UserRepository
 from core.schemas.user import UserCreate, UserUpdate
 from core.models.user import User
-from app.services.exceptions import NotFoundException, BadRequestException
+from business.services.exceptions import NotFoundException, BadRequestException
 from fastapi import Depends
 from typing import List, Optional
 from api.utils.auth import Auth

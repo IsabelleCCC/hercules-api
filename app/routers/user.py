@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List, Optional
-from app.services.auth import AuthService
+from business.services.auth import AuthService
 
-from app.services.user import UserService
-from app.services.exceptions import NotFoundException, BadRequestException
+from business.services.user import UserService
+from business.services.exceptions import NotFoundException, BadRequestException
 from core.schemas.user import UserCreate, UserUpdate, User
 
 UserRouter = APIRouter(

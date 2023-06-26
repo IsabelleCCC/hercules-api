@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List, Optional
 
-from app.services.auth import AuthService
-from app.services.exceptions import NotFoundException, UnauthorizedException
-from app.view_models.auth import UserLogin, UserToken, SystemUser
+from business.services.auth import AuthService
+from business.services.exceptions import NotFoundException, UnauthorizedException
+from business.view_models.auth import UserLogin, UserToken, SystemUser
 
 AuthRouter = APIRouter(
     prefix='/auth', tags=['auth']

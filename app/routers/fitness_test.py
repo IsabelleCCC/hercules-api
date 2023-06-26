@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List, Optional
-from app.services.auth import AuthService
-from app.services.fitness_test import FitnessTestService
-from app.services.exceptions import NotFoundException
+from business.services.auth import AuthService
+from business.services.fitness_test import FitnessTestService
+from business.services.exceptions import NotFoundException
 from core.schemas.fitness_test import FitnessTestCreate, FitnessTestUpdate, FitnessTest
 
 FitnessTestRouter = APIRouter(

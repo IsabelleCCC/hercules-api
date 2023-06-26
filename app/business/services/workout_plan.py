@@ -2,7 +2,7 @@ from fastapi import Depends
 from core.models.workout_plan import WorkoutPlan as WorkoutPlan
 from core.schemas.workout_plan import WorkoutPlanCreate, WorkoutPlanUpdate
 from infrastructure.repositories.workout_plan import WorkoutPlanRepository
-from app.services.exceptions import NotFoundException
+from business.services.exceptions import NotFoundException
 from typing import List, Optional
 
 

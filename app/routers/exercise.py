@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List, Optional
-from app.services.auth import AuthService
-from app.services.exercise import ExerciseService
-from app.services.exceptions import NotFoundException
+from business.services.auth import AuthService
+from business.services.exercise import ExerciseService
+from business.services.exceptions import NotFoundException
 from core.schemas.exercise import ExerciseCreate, ExerciseUpdate, Exercise
 
 ExerciseRouter = APIRouter(

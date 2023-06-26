@@ -3,7 +3,7 @@ from typing import Optional, List
 from infrastructure.repositories.fitness_test import FitnessTestRepository
 from core.models.fitness_test import FitnessTest
 from core.schemas.fitness_test import FitnessTestCreate, FitnessTestUpdate
-from app.services.exceptions import NotFoundException
+from business.services.exceptions import NotFoundException
 
 
 class FitnessTestService:

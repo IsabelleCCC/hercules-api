@@ -9,10 +9,10 @@ from dotenv import load_dotenv
 
 from api.utils.auth import Auth
 from infrastructure.repositories.user import UserRepository
-from app.view_models.auth import UserLogin, UserToken
-from app.services.exceptions import NotFoundException, UnauthorizedException
+from business.view_models.auth import UserLogin, UserToken
+from business.services.exceptions import NotFoundException, UnauthorizedException
 from fastapi.security import OAuth2PasswordBearer
-from app.view_models.auth import TokenPayload, SystemUser
+from business.view_models.auth import TokenPayload, SystemUser
 
 class AuthService:
     auth: Auth
