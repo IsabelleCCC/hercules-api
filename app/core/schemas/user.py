@@ -8,6 +8,7 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
+    password: str
     gender: str
     birth_date: date
 
@@ -21,6 +22,6 @@ class User(UserBase):
     id: int
     gender: str
     birth_date: date
-    password: str
+
     class Config:
         orm_mode = True

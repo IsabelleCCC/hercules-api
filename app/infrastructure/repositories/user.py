@@ -24,8 +24,7 @@ class UserRepository:
 
 
     def create(self, user: UserCreate) -> UserModel:
-        db_user = UserModel(email=user.email, name=user.name, gender=user.gender, birth_date=user.birth_date)
-        db_user.password = user.password
+        db_user = UserModel(email=user.email, name=user.name, gender=user.gender, birth_date=user.birth_date, password = user.password)
         self.db.add(db_user)
         self.db.commit()
         self.db.refresh(db_user)
