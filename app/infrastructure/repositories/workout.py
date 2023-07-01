@@ -17,7 +17,6 @@ class WorkoutRepository:
 
     def create(self, workout: WorkoutCreate) -> Workout:
         db_workout = WorkoutModel(workout_exercise_id=workout.workout_exercise_id,
-                                  datetime=workout.datetime,
                                   reps=workout.reps,
                                   max_weight=workout.max_weight)
         self.db.add(db_workout)

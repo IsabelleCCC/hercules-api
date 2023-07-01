@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from business.services.auth import AuthService
 from business.services.workout import WorkoutService
-from business.services.exceptions import NotFoundException
+from business.services.exceptions import NotFoundException, BadRequestException
 from core.schemas.workout import WorkoutCreate, WorkoutUpdate, Workout, WorkoutWithExercise
 
 WorkoutRouter = APIRouter(
@@ -29,10 +29,13 @@ def list(user_id: int, skip: Optional[int] = 0, limit: Optional[int] = 10, worko
         raise HTTPException(status_code=404, detail="Nenhum registro associado ao usuário.")
 
 
-@WorkoutRouter.post("", response_model=Workout)
-def create(workout_body: WorkoutCreate, workout_service: WorkoutService = Depends()):
-    workout = workout_service.create(workout_body)
-    return workout
+@WorkoutRouter.post("", response_model=List[Workout])
+def create(workout_body_list: List[WorkoutCreate], workout_service: WorkoutService = Depends()):
+    try:
+        workout = workout_service.create(workout_body_list)
+        return workout
+    except BadRequestException:
+        raise HTTPException(status_code=400, detail="Não foi possível inserir.")
 
 
 @WorkoutRouter.put("", response_model=WorkoutWithExercise)

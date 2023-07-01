@@ -2,7 +2,7 @@ from fastapi import Depends
 from core.models.workout import Workout
 from core.schemas.workout import WorkoutCreate, WorkoutUpdate, WorkoutWithExercise
 from infrastructure.repositories.workout import WorkoutRepository
-from business.services.exceptions import NotFoundException
+from business.services.exceptions import NotFoundException, BadRequestException
 from typing import List, Optional
 
 
@@ -12,11 +12,18 @@ class WorkoutService:
     def __init__(self, workoutRepository: WorkoutRepository = Depends()) -> None:
         self.workoutRepository = workoutRepository
 
-    def create(self, workout_body: WorkoutCreate) -> Workout:
-        return self.workoutRepository.create(Workout(workout_exercise_id=workout_body.workout_exercise_id,
-                                                     datetime=workout_body.datetime,
-                                                     reps=workout_body.reps,
-                                                     max_weight=workout_body.max_weight))
+    def create(self, workout_body_list: List[WorkoutCreate]) -> List[Workout]:
+        workout_list: List[WorkoutCreate]
+
+        try:
+            for workout_body in workout_body_list:
+                workout_list.append(self.workoutRepository.create(Workout(workout_exercise_id=workout_body.workout_exercise_id,
+                                                                          reps=workout_body.reps,
+                                                                          max_weight=workout_body.max_weight)))
+        except:
+            raise BadRequestException()
+
+        return workout_list
 
     def get(self, workout_id: int) -> WorkoutWithExercise:
         workout = self.workoutRepository.get_with_exercise(workout_id)

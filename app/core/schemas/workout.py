@@ -9,8 +9,10 @@ class WorkoutBase(BaseModel):
     reps: int
     max_weight: float
 
-class WorkoutCreate(WorkoutBase):
-    pass
+class WorkoutCreate(BaseModel):
+    workout_exercise_id: int
+    reps: int
+    max_weight: float
 
 class WorkoutUpdate(WorkoutBase):
     id: int
