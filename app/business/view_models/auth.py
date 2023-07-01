@@ -29,3 +29,4 @@ class TokenPayload(BaseModel):
     exp: int = None
     email: str = None
     name: str = None
+    id: int = None

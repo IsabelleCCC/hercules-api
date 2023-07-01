@@ -37,7 +37,7 @@ class AuthService:
             raise UnauthorizedException()
 
         return {
-            "access_token": self.auth.create_access_token(user.email, user.name),
+            "access_token": self.auth.create_access_token(user.email, user.name, user.id),
             "refresh_token": self.auth.create_refresh_token(),
         }
 
