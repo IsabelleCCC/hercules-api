@@ -31,11 +31,11 @@ def list(user_id: int, skip: Optional[int] = 0, limit: Optional[int] = 10, worko
 
 @WorkoutRouter.post("", response_model=List[Workout])
 def create(workout_body_list: List[WorkoutCreate], workout_service: WorkoutService = Depends()):
-    try:
-        workout = workout_service.create(workout_body_list)
-        return workout
-    except BadRequestException:
-        raise HTTPException(status_code=400, detail="Não foi possível inserir.")
+    # try:
+    workout = workout_service.create(workout_body_list)
+    return workout
+    # except BadRequestException:
+    #     raise HTTPException(status_code=400, detail="Não foi possível inserir.")
 
 
 @WorkoutRouter.put("", response_model=WorkoutWithExercise)

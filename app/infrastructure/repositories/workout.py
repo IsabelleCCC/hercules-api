@@ -15,14 +15,19 @@ class WorkoutRepository:
     def __init__(self, db: Session = Depends(get_db)) -> None:
         self.db = db
 
-    def create(self, workout: WorkoutCreate) -> Workout:
-        db_workout = WorkoutModel(workout_exercise_id=workout.workout_exercise_id,
-                                  reps=workout.reps,
-                                  max_weight=workout.max_weight)
-        self.db.add(db_workout)
+    def create(self, workoutList: List[WorkoutCreate]) -> List[Workout]:
+        workout_list = [
+            WorkoutModel(
+                workout_exercise_id=workout.workout_exercise_id,
+                reps=workout.reps,
+                max_weight=workout.max_weight
+            )
+            for workout in workoutList
+        ]
+
+        self.db.add_all(workout_list)
         self.db.commit()
-        self.db.refresh(db_workout)
-        return db_workout
+        return workout_list
 
     def get_with_exercise(self, id: int) -> WorkoutWithExercise:
         response = self.db.query(
