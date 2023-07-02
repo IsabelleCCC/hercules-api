@@ -6,6 +6,7 @@ from core.schemas.workout_plan import WorkoutPlanCreate, WorkoutPlanUpdate, Work
 from core.models.exercise_workout_plan import ExerciseWorkoutPlan as ExerciseWorkoutPlanModel
 from infrastructure.configs.database import get_db
 from typing import List
+from sqlalchemy.orm import lazyload
 
 class WorkoutPlanRepository:
     db: Session
@@ -36,8 +37,11 @@ class WorkoutPlanRepository:
         self.db.flush()
         return db_workout_plan
 
-    def get(self, workout_plan_id: int) -> WorkoutPlanModel:
-        return self.db.query(WorkoutPlanModel).filter(WorkoutPlanModel.id == workout_plan_id).order_by(desc(WorkoutPlanModel.start_date)).first()
+    def get(self, workout_plan_id: int) -> WorkoutPlanCreated:
+        return self.db.query(
+            WorkoutPlanModel).options(lazyload(WorkoutPlanModel.exercises_workout_plan)) \
+        .outerjoin(ExerciseWorkoutPlanModel, ExerciseWorkoutPlanModel.workout_plan_id == WorkoutPlanModel.id) \
+        .filter(WorkoutPlanModel.id == workout_plan_id).order_by(desc(WorkoutPlanModel.start_date)).first()
 
     def update(self, workout_plan: WorkoutPlanUpdate) -> WorkoutPlanModel:
         self.db.merge(workout_plan)

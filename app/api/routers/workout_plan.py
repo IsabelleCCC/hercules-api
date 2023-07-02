@@ -11,7 +11,7 @@ WorkoutPlanRouter = APIRouter(
     ,dependencies=[Depends(AuthService.get_current_user)]
 )
 
-@WorkoutPlanRouter.get("/{workout_plan_id}", response_model=WorkoutPlan)
+@WorkoutPlanRouter.get("/{workout_plan_id}", response_model=WorkoutPlanCreated)
 def get(workout_plan_id: int, workout_plan_service: WorkoutPlanService = Depends()):
     try:
         workout_plan = workout_plan_service.get(workout_plan_id)
