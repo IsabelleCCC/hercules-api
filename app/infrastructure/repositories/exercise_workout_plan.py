@@ -1,7 +1,9 @@
 from sqlalchemy.orm import Session, join, aliased
+from sqlalchemy import func
 from fastapi import Depends
 from typing import List, Optional
-from core.models.exercise import Exercise
+from core.models.exercise import Exercise as ExerciseModel
+from core.models.workout import Workout as WorkoutModel
 from core.models.exercise_workout_plan import ExerciseWorkoutPlan as ExerciseWorkoutPlanModel
 from core.schemas.exercise_workout_plan import ExerciseWorkoutPlanCreate, ExerciseWorkoutPlanUpdate, ExerciseWorkoutPlan, ExerciseWorkoutPlanWithName
 from infrastructure.configs.database import get_db
@@ -32,9 +34,15 @@ class ExerciseWorkoutPlanRepository:
             ExerciseWorkoutPlanModel.exercise_id,
             ExerciseWorkoutPlanModel.workout_plan_id,
             ExerciseWorkoutPlanModel.combination,
-            Exercise.name.label('exercise_name')) \
-        .join(Exercise, Exercise.id == ExerciseWorkoutPlanModel.exercise_id) \
-        .filter(ExerciseWorkoutPlanModel.id == id).first()
+            WorkoutModel.id.label('workout_id'),
+            ExerciseModel.name.label('exercise_name'),
+            WorkoutModel.reps.label('workout_reps'),
+            WorkoutModel.max_weight.label('workout_max_weight'))\
+        .join(ExerciseModel, ExerciseModel.id == ExerciseWorkoutPlanModel.exercise_id) \
+        .outerjoin(WorkoutModel, WorkoutModel.workout_exercise_id == ExerciseWorkoutPlanModel.id) \
+        .filter(ExerciseWorkoutPlanModel.id == id) \
+        .filter(func.DATE(WorkoutModel.datetime) == func.CURRENT_DATE()) \
+        .first()
 
         return response
 
@@ -49,9 +57,14 @@ class ExerciseWorkoutPlanRepository:
             ExerciseWorkoutPlanModel.exercise_id,
             ExerciseWorkoutPlanModel.workout_plan_id,
             ExerciseWorkoutPlanModel.combination,
-            Exercise.name.label('exercise_name')) \
-        .join(Exercise, Exercise.id == ExerciseWorkoutPlanModel.exercise_id) \
-        .filter(ExerciseWorkoutPlanModel.workout_plan_id == workout_plan_id) \
+            WorkoutModel.id.label('workout_id'),
+            ExerciseModel.name.label('exercise_name'),
+            WorkoutModel.reps.label('workout_reps'),
+            WorkoutModel.max_weight.label('workout_max_weight'))\
+        .join(ExerciseModel, ExerciseModel.id == ExerciseWorkoutPlanModel.exercise_id) \
+        .outerjoin(WorkoutModel, WorkoutModel.workout_exercise_id == ExerciseWorkoutPlanModel.id) \
+        .filter(ExerciseWorkoutPlanModel.id == workout_plan_id) \
+        .filter(func.DATE(WorkoutModel.datetime) == func.CURRENT_DATE()) \
         .offset(skip) \
         .limit(limit) \
         .all()
