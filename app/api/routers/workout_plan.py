@@ -4,7 +4,7 @@ from typing import List, Optional
 from business.services.auth import AuthService
 from business.services.workout_plan import WorkoutPlanService
 from business.services.exceptions import NotFoundException
-from core.schemas.workout_plan import WorkoutPlanCreate, WorkoutPlanUpdate, WorkoutPlan
+from core.schemas.workout_plan import WorkoutPlanCreate, WorkoutPlanUpdate, WorkoutPlan, WorkoutPlanCreated
 
 WorkoutPlanRouter = APIRouter(
     prefix='/workout-plan', tags=['workout-plan']
@@ -29,7 +29,7 @@ def list(user_id: int, skip: Optional[int] = 0, limit: Optional[int] = 10, worko
         raise HTTPException(status_code=404, detail="Nenhum plano de treino associado a esse usuário.")
 
 
-@WorkoutPlanRouter.post("", response_model=WorkoutPlan)
+@WorkoutPlanRouter.post("", response_model=WorkoutPlanCreated)
 def create(workout_plan_body: WorkoutPlanCreate, workout_plan_service: WorkoutPlanService = Depends()):
     workout_plan = workout_plan_service.create(workout_plan_body)
     return workout_plan

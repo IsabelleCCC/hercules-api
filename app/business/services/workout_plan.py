@@ -1,6 +1,6 @@
 from fastapi import Depends
 from core.models.workout_plan import WorkoutPlan as WorkoutPlan
-from core.schemas.workout_plan import WorkoutPlanCreate, WorkoutPlanUpdate
+from core.schemas.workout_plan import WorkoutPlanCreate, WorkoutPlanUpdate, WorkoutPlanCreated
 from infrastructure.repositories.workout_plan import WorkoutPlanRepository
 from business.services.exceptions import NotFoundException
 from typing import List, Optional
@@ -12,11 +12,8 @@ class WorkoutPlanService:
     def __init__(self, workoutPlanRepository: WorkoutPlanRepository = Depends()) -> None:
         self.workoutPlanRepository = workoutPlanRepository
 
-    def create(self, workout_plan_body: WorkoutPlanCreate) -> WorkoutPlan:
-        return self.workoutPlanRepository.create(WorkoutPlan(name=workout_plan_body.name,
-                                                             start_date=workout_plan_body.start_date,
-                                                             end_date=workout_plan_body.end_date,
-                                                             user_id=workout_plan_body.user_id))
+    def create(self, workout_plan_body: WorkoutPlanCreate) -> WorkoutPlanCreated:
+        return self.workoutPlanRepository.create(workout_plan_body)
 
     def get(self, workout_plan_id: int) -> WorkoutPlan:
         workout_plan = self.workoutPlanRepository.get(workout_plan_id)

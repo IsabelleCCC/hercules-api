@@ -14,7 +14,6 @@ DB_SCHEMA = os.environ.get('DB_SCHEMA')
 
 SQLALCHEMY_DATABASE_URL = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOSTNAME}:{DB_PORT}/{DB_SCHEMA}"
 
-print('pinto',SQLALCHEMY_DATABASE_URL)
 engine = create_engine(SQLALCHEMY_DATABASE_URL, pool_recycle=3600)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

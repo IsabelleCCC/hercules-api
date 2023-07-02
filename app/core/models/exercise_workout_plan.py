@@ -18,5 +18,5 @@ class ExerciseWorkoutPlan(Base):
     combination = Column(Integer, ForeignKey('exerciseworkoutplan.id'))
 
     exercise = relationship('Exercise', backref='workout_plans')
-    workout_plan = relationship('WorkoutPlan', backref='exercises')
     sub_exercises = relationship('ExerciseWorkoutPlan', backref='parent', remote_side=[id])
+    workout_plan = relationship('WorkoutPlan', back_populates='exercises_workout_plan')

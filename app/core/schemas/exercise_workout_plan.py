@@ -9,9 +9,11 @@ class ExerciseWorkoutPlanBase(BaseModel):
     combination: Optional[int]
 
 
-class ExerciseWorkoutPlanCreate(ExerciseWorkoutPlanBase):
-    pass
-
+class ExerciseWorkoutPlanCreate(BaseModel):
+    exercise_id: int
+    sets: int
+    reps: int
+    combination: Optional[int]
 
 class ExerciseWorkoutPlanUpdate(ExerciseWorkoutPlanBase):
     id: int

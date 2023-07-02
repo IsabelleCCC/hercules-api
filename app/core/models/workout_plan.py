@@ -13,3 +13,4 @@ class WorkoutPlan(Base):
     end_date = Column(Date, nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     user = relationship('User', backref='workout_plans')
+    exercises_workout_plan = relationship('ExerciseWorkoutPlan', back_populates='workout_plan')
