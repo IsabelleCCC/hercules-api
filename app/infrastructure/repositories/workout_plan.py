@@ -49,8 +49,11 @@ class WorkoutPlanRepository:
         self.db.flush()
         return workout_plan
 
-    def list(self, user_id: int, skip: int = 0, limit: int = 100) -> List[WorkoutPlanModel]:
-        return self.db.query(WorkoutPlanModel).filter(WorkoutPlanModel.user_id == user_id).offset(skip).limit(limit).all()
+    def list(self, user_id: int, skip: int = 0, limit: int = 100) -> List[WorkoutPlanCreated]:
+        return self.db.query(
+            WorkoutPlanModel).options(lazyload(WorkoutPlanModel.exercises_workout_plan)) \
+        .outerjoin(ExerciseWorkoutPlanModel, ExerciseWorkoutPlanModel.workout_plan_id == WorkoutPlanModel.id) \
+        .filter(WorkoutPlanModel.user_id == user_id).order_by(desc(WorkoutPlanModel.start_date)).offset(skip).limit(limit).all()
 
     def delete(self, workout_plan: WorkoutPlanModel) -> None:
         self.db.delete(workout_plan)

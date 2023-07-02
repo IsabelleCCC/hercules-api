@@ -20,7 +20,7 @@ def get(workout_plan_id: int, workout_plan_service: WorkoutPlanService = Depends
         raise HTTPException(status_code=404, detail="Plano de treino não encontrado.")
 
 
-@WorkoutPlanRouter.get("", response_model=List[WorkoutPlan])
+@WorkoutPlanRouter.get("", response_model=List[WorkoutPlanCreated])
 def list(user_id: int, skip: Optional[int] = 0, limit: Optional[int] = 10, workout_plan_service: WorkoutPlanService = Depends()):
     try:
         workout_plan = workout_plan_service.list(user_id, skip, limit)

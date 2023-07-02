@@ -15,7 +15,7 @@ class WorkoutPlanService:
     def create(self, workout_plan_body: WorkoutPlanCreate) -> WorkoutPlanCreated:
         return self.workoutPlanRepository.create(workout_plan_body)
 
-    def get(self, workout_plan_id: int) -> WorkoutPlan:
+    def get(self, workout_plan_id: int) -> WorkoutPlanCreated:
         workout_plan = self.workoutPlanRepository.get(workout_plan_id)
         if not workout_plan:
             raise NotFoundException()
@@ -41,7 +41,7 @@ class WorkoutPlanService:
 
         return self.workoutPlanRepository.delete(workout_plan)
 
-    def list(self, user_id: int, skip: Optional[int] = 0, limit: Optional[int] = 10) -> List[WorkoutPlan]:
+    def list(self, user_id: int, skip: Optional[int] = 0, limit: Optional[int] = 10) -> List[WorkoutPlanCreated]:
         workout_plan_list = self.workoutPlanRepository.list(user_id, skip, limit)
 
         if len(workout_plan_list) == 0:
