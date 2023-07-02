@@ -26,7 +26,7 @@ class ExerciseWorkoutPlan(ExerciseWorkoutPlanBase):
 class ExerciseWorkoutPlanWithName(ExerciseWorkoutPlanBase):
     id: int
     exercise_name: str
-    workout_id: int
+    workout_id: Optional[int]
     workout_reps: Optional[int]
     workout_max_weight: Optional[float]
 

@@ -39,9 +39,8 @@ class ExerciseWorkoutPlanRepository:
             WorkoutModel.reps.label('workout_reps'),
             WorkoutModel.max_weight.label('workout_max_weight'))\
         .join(ExerciseModel, ExerciseModel.id == ExerciseWorkoutPlanModel.exercise_id) \
-        .outerjoin(WorkoutModel, WorkoutModel.workout_exercise_id == ExerciseWorkoutPlanModel.id) \
+        .outerjoin(WorkoutModel, (WorkoutModel.workout_exercise_id == ExerciseWorkoutPlanModel.id) & (func.DATE(WorkoutModel.datetime) == func.CURRENT_DATE())) \
         .filter(ExerciseWorkoutPlanModel.id == id) \
-        .filter(func.DATE(WorkoutModel.datetime) == func.CURRENT_DATE()) \
         .first()
 
         return response
@@ -62,9 +61,8 @@ class ExerciseWorkoutPlanRepository:
             WorkoutModel.reps.label('workout_reps'),
             WorkoutModel.max_weight.label('workout_max_weight'))\
         .join(ExerciseModel, ExerciseModel.id == ExerciseWorkoutPlanModel.exercise_id) \
-        .outerjoin(WorkoutModel, WorkoutModel.workout_exercise_id == ExerciseWorkoutPlanModel.id) \
-        .filter(ExerciseWorkoutPlanModel.id == workout_plan_id) \
-        .filter(func.DATE(WorkoutModel.datetime) == func.CURRENT_DATE()) \
+        .outerjoin(WorkoutModel, (WorkoutModel.workout_exercise_id == ExerciseWorkoutPlanModel.id) & (func.DATE(WorkoutModel.datetime) == func.CURRENT_DATE())) \
+        .filter(ExerciseWorkoutPlanModel.workout_plan_id == workout_plan_id) \
         .offset(skip) \
         .limit(limit) \
         .all()
