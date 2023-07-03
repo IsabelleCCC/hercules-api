@@ -47,12 +47,14 @@ class UserService:
         if not user:
             raise NotFoundException()
 
+        hashed_password = self.auth.get_hashed_password(user_body.password)
+
         return self.userRepository.update(User(id=user_body.id,
                                                name=user_body.name,
                                                gender=user_body.gender,
                                                birth_date=user_body.birth_date,
                                                email=user_body.email,
-                                               password=user_body.email))
+                                               password=hashed_password))
 
     def delete(self, user_id: int):
         user = self.userRepository.get_by_id(user_id)
