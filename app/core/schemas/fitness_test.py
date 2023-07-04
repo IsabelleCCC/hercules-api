@@ -35,6 +35,6 @@ class FitnessTestUpdate(FitnessTestBase):
 
 class FitnessTest(FitnessTestBase):
     id: int
-
+    date: date
     class Config:
         orm_mode = True
