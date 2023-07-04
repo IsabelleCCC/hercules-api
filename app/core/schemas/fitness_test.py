@@ -5,7 +5,6 @@ from datetime import date
 
 class FitnessTestBase(BaseModel):
     user_id: int
-    date: date
     weight: float
     body_fat: Optional[float]
     chest: Optional[float]

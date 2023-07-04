@@ -8,7 +8,7 @@ class FitnessTest(Base):
     __tablename__ = 'fitnesstest'
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    date = Column(DateTime, nullable=False)
+    date = Column(DateTime, nullable=False, server_default="CURRENT_TIMESTAMP")
     weight = Column(DECIMAL(5,2), nullable=False)
     body_fat = Column(DECIMAL(4,2))
     chest = Column(DECIMAL(5,2))

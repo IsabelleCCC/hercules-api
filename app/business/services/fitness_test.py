@@ -15,7 +15,6 @@ class FitnessTestService:
     def create(self, fitness_test_body: FitnessTestCreate) -> FitnessTest:
         return self.fitnessTestRepository.create(FitnessTest(
             user_id=fitness_test_body.user_id,
-            date=fitness_test_body.date,
             weight=fitness_test_body.weight,
             body_fat=fitness_test_body.body_fat,
             chest=fitness_test_body.chest,
