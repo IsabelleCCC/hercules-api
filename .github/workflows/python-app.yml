@@ -28,5 +28,5 @@ jobs:
       with:
         file: Dockerfile
         push: true
-        tags: ${{ secrets.REGISTRY_URL }}/hercules-api:dev
+        tags: ${{ secrets.REGISTRY_URL }}/hercules/hercules-api:dev
           
