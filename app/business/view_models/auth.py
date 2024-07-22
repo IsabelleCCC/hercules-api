@@ -19,6 +19,7 @@ class User(UserBase):
         orm_mode = True
 
 class SystemUser(UserBase):
+    email: str
     id: int
 
 class UserToken(BaseModel):
