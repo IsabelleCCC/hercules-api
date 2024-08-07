@@ -12,20 +12,20 @@ class ExerciseRepository:
     def __init__(self, db: Session = Depends(get_db)) -> None:
         self.db = db
 
-    def get(self, exercise_id: int) -> ExerciseModel:
+    def get(self, exercise_id: int) -> Exercise:
         return self.db.query(ExerciseModel).filter(ExerciseModel.id == exercise_id).first()
 
-    def list(self, skip: Optional[int] = 0, limit: Optional[int] = 100) -> list[ExerciseModel]:
+    def list(self, skip: Optional[int] = 0, limit: Optional[int] = 100) -> list[Exercise]:
         return self.db.query(ExerciseModel).offset(skip).limit(limit).all()
 
-    def create(self, exercise: ExerciseCreate) -> ExerciseModel:
+    def create(self, exercise: ExerciseCreate) -> Exercise:
         exercise_data = ExerciseModel(name=exercise.name)
         self.db.add(exercise_data)
         self.db.commit()
         self.db.refresh(exercise_data)
         return exercise_data
 
-    def update(self, exercise: ExerciseUpdate) -> ExerciseModel:
+    def update(self, exercise: ExerciseUpdate) -> Exercise:
         self.db.merge(exercise)
         self.db.commit()
         return exercise

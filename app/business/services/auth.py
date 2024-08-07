@@ -13,27 +13,25 @@ from business.view_models.auth import UserLogin, UserToken
 from business.services.exceptions import NotFoundException, UnauthorizedException
 from fastapi.security import OAuth2PasswordBearer
 from business.view_models.auth import TokenPayload, SystemUser
+from sqlalchemy.orm import Session
+from infrastructure.configs.database import get_db
 
 class AuthService:
-    auth: Auth
-    userRepository: UserRepository
-
     reuseable_oauth = OAuth2PasswordBearer(
-        tokenUrl="/auth/login",
+        tokenUrl='/auth/login'
     )
 
-    def __init__(self, authRepository: Auth = Depends(), userRepository: UserRepository = Depends()) -> None:
-        self.auth = authRepository
+    def __init__(self, auth: Auth = Depends(), userRepository: UserRepository = Depends()) -> None:
+        self.auth = auth
         self.userRepository = userRepository
 
     def login(self, login_body: OAuth2PasswordRequestForm = Depends()) -> UserToken:
-        user = self.userRepository.get_by_email(email=login_body.email)
+        user = self.userRepository.get_by_email(email=login_body.username)
 
         if not user:
             raise NotFoundException()
 
-        hashed_pass = user.password
-        if not self.auth.verify_password(login_body.password, hashed_pass):
+        if not self.auth.verify_password(login_body.password, user.password):
             raise UnauthorizedException()
 
         return {

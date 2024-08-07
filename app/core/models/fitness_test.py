@@ -5,9 +5,9 @@ from infrastructure.configs.database import Base
 
 # Define the models
 class FitnessTest(Base):
-    __tablename__ = 'fitnesstest'
+    __tablename__ = 'FitnessTest'
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('User.id'), nullable=False)
     date = Column(DateTime, nullable=False, server_default="CURRENT_TIMESTAMP")
     weight = Column(DECIMAL(5,2), nullable=False)
     body_fat = Column(DECIMAL(4,2))

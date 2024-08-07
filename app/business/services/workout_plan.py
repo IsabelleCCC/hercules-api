@@ -1,6 +1,6 @@
 from fastapi import Depends
 from core.models.workout_plan import WorkoutPlan as WorkoutPlan
-from core.schemas.workout_plan import WorkoutPlanCreate, WorkoutPlanUpdate, WorkoutPlanCreated
+from core.schemas.workout_plan import WorkoutPlanCreate, WorkoutPlanUpdate, WorkoutPlanCreated, WorkoutPlanWithExercisePlan
 from infrastructure.repositories.workout_plan import WorkoutPlanRepository
 from business.services.exceptions import NotFoundException
 from typing import List, Optional
@@ -15,7 +15,7 @@ class WorkoutPlanService:
     def create(self, workout_plan_body: WorkoutPlanCreate) -> WorkoutPlanCreated:
         return self.workoutPlanRepository.create(workout_plan_body)
 
-    def get(self, workout_plan_id: int) -> WorkoutPlanCreated:
+    def get(self, workout_plan_id: int) -> WorkoutPlanWithExercisePlan:
         workout_plan = self.workoutPlanRepository.get(workout_plan_id)
         if not workout_plan:
             raise NotFoundException()
@@ -41,10 +41,7 @@ class WorkoutPlanService:
 
         return self.workoutPlanRepository.delete(workout_plan)
 
-    def list(self, user_id: int, skip: Optional[int] = 0, limit: Optional[int] = 10) -> List[WorkoutPlanCreated]:
+    def list(self, user_id: int, skip: Optional[int] = 0, limit: Optional[int] = 10) -> List[WorkoutPlanWithExercisePlan]:
         workout_plan_list = self.workoutPlanRepository.list(user_id, skip, limit)
-
-        if len(workout_plan_list) == 0:
-            raise NotFoundException()
 
         return workout_plan_list

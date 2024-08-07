@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import List
 from datetime import date
 from core.schemas.user import User
-from core.schemas.exercise_workout_plan import ExerciseWorkoutPlanCreate, ExerciseWorkoutPlan
+from core.schemas.exercise_plan import ExercisePlanCreate, ExercisePlan
 
 class WorkoutPlanBase(BaseModel):
     name: str
@@ -14,11 +14,18 @@ class WorkoutPlanBase(BaseModel):
         orm_mode = True
 
 class WorkoutPlanCreate(WorkoutPlanBase):
-    exercises_workout_plan: List[ExerciseWorkoutPlanCreate]
+    exercise_plans: List[ExercisePlanCreate]
 
 class WorkoutPlanCreated(WorkoutPlanBase):
-    exercises_workout_plan: List[ExerciseWorkoutPlan]
+    exercise_plans: List[ExercisePlan]
     id: int
+
+class WorkoutPlanWithExercisePlan(WorkoutPlanBase):
+    exercise_plans: List[ExercisePlan]
+    id: int
+
+    class Config:
+        orm_mode = True
 
 class WorkoutPlanUpdate(WorkoutPlanBase):
     id: int
