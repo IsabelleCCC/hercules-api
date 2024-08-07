@@ -29,3 +29,10 @@ class WorkoutDoneWithName(WorkoutDoneBase):
 
     class Config:
         orm_mode = True
+
+class WorkoutDoneWithPagination(BaseModel):
+    count: int
+    workouts_done: List[WorkoutDoneWithName]
+
+    class Config:
+        orm_mode = True

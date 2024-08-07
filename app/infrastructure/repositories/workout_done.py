@@ -1,3 +1,4 @@
+from sqlalchemy import func
 from sqlalchemy.orm import Session, join, aliased
 from fastapi import Depends
 from typing import List, Optional
@@ -7,7 +8,7 @@ from core.models.exercise_plan import ExercisePlan
 from core.models.workout_done import WorkoutDone as WorkoutDoneModel
 from core.models.workout_plan import WorkoutPlan
 from core.models.user import User
-from core.schemas.workout_done import WorkoutDoneCreate, WorkoutDoneUpdate, WorkoutDone, WorkoutDoneWithName
+from core.schemas.workout_done import WorkoutDoneCreate, WorkoutDoneUpdate, WorkoutDone, WorkoutDoneWithName, WorkoutDoneWithPagination
 from infrastructure.configs.database import get_db
 
 
@@ -59,8 +60,8 @@ class WorkoutDoneRepository:
     def get(self, id: int) -> WorkoutDone:
         return self.db.query(WorkoutDoneModel).filter(WorkoutDoneModel.id == id).first()
 
-    def list(self, user_id: int, skip: Optional[int] = 0, limit: Optional[int] = 100) -> List[WorkoutDone]:
-        response = self.db.query(
+    def list(self, user_id: int, skip: Optional[int] = 0, limit: Optional[int] = 100) -> WorkoutDoneWithPagination:
+        workouts = self.db.query(
             WorkoutDoneModel.id,
             WorkoutDoneModel.datetime,
             WorkoutDoneModel.duration,
@@ -74,7 +75,20 @@ class WorkoutDoneRepository:
             .limit(limit) \
             .all()
 
+        count_workouts = self.db.query(func.count(WorkoutDoneModel.id))\
+        .join(WorkoutPlan, WorkoutPlan.id == WorkoutDoneModel.workout_plan_id) \
+            .join(User, WorkoutPlan.user_id == User.id) \
+            .filter(User.id == user_id) \
+            .order_by(WorkoutDoneModel.datetime.desc()) \
+            .scalar()
+
+        response = WorkoutDoneWithPagination(
+            count=count_workouts,
+            workouts_done=workouts
+        )
+
         return response
+
 
     def update(self, workout: WorkoutDoneUpdate) -> WorkoutDoneUpdate:
         self.db.merge(workout)

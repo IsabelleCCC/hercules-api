@@ -2,11 +2,12 @@ from sqlalchemy.orm import Session, join, aliased
 from sqlalchemy import func
 from fastapi import Depends
 from typing import List, Optional
+from core.models.workout_plan import WorkoutPlan as WorkoutPlanModel
 from core.models.exercise import Exercise as ExerciseModel
 from core.models.workout_done import WorkoutDone as WorkoutDoneModel
 from core.models.exercise_plan import ExercisePlan as ExercisePlanModel
 from core.models.exercise_done import ExerciseDone as ExerciseDoneModel
-from core.schemas.exercise_done import ExerciseDone as ExerciseDone, ExerciseDoneCreate, ExerciseDoneWithName
+from core.schemas.exercise_done import ExerciseDone as ExerciseDone, ExerciseDoneByUser, ExerciseDoneCreate, ExerciseDoneWithName, ExerciseDoneWithPagination
 from infrastructure.configs.database import get_db
 
 
@@ -30,15 +31,15 @@ class ExerciseDoneRepository:
         return db_exercise_done
 
 
-    def list_with_name_by_workout_done(self, workout_done_id: int, skip: Optional[int] = 0, limit: Optional[int] = 100) -> list[ExerciseDoneWithName]:
+    def list_by_workout_done(self, workout_done_id: int, skip: Optional[int] = 0, limit: Optional[int] = 100) -> list[ExerciseDoneWithName]:
         response = self.db.query(
             ExerciseDoneModel.id,
             ExerciseDoneModel.reps,
             ExerciseDoneModel.max_weight,
-            ExerciseDoneModel.datetime,
             ExerciseDoneModel.workout_done_id,
             ExerciseDoneModel.exercise_plan_id,
-            ExerciseModel.name.label('exercise_name'))\
+            ExerciseModel.name.label('exercise_name'),
+            ExerciseModel.muscle_group)\
         .join(ExercisePlanModel, ExercisePlanModel.id == ExerciseDoneModel.exercise_plan_id) \
         .join(ExerciseModel, ExerciseModel.id == ExercisePlanModel.exercise_id) \
         .filter(WorkoutDoneModel.id == workout_done_id) \
@@ -47,6 +48,38 @@ class ExerciseDoneRepository:
         .all()
 
         return response
+
+    def list_by_user_id(self, user_id: int, skip: Optional[int] = 0, limit: Optional[int] = 100) -> list[ExerciseDoneWithPagination]:
+        exercises = self.db.query(
+            ExerciseDoneModel.id,
+            ExerciseDoneModel.reps,
+            ExerciseDoneModel.max_weight,
+            ExerciseDoneModel.workout_done_id,
+            ExerciseDoneModel.exercise_plan_id,
+            ExerciseModel.name.label('exercise_name'),
+            ExerciseModel.muscle_group,
+            WorkoutDoneModel.datetime)\
+        .join(ExercisePlanModel, ExercisePlanModel.id == ExerciseDoneModel.exercise_plan_id) \
+        .join(ExerciseModel, ExerciseModel.id == ExercisePlanModel.exercise_id) \
+        .join(WorkoutPlanModel, ExercisePlanModel.workout_plan_id == WorkoutPlanModel.id) \
+        .join(WorkoutDoneModel, WorkoutPlanModel.id == WorkoutDoneModel.workout_plan_id) \
+        .filter(WorkoutPlanModel.user_id == user_id) \
+        .offset(skip) \
+        .limit(limit) \
+        .all()
+
+        count_exercises = self.db.query(func.count(ExerciseDoneModel.id))\
+        .join(ExercisePlanModel, ExercisePlanModel.id == ExerciseDoneModel.exercise_plan_id) \
+        .join(ExerciseModel, ExerciseModel.id == ExercisePlanModel.exercise_id) \
+        .join(WorkoutPlanModel, ExercisePlanModel.workout_plan_id == WorkoutPlanModel.id) \
+        .join(WorkoutDoneModel, WorkoutPlanModel.id == WorkoutDoneModel.workout_plan_id) \
+        .filter(WorkoutPlanModel.user_id == user_id) \
+        .scalar()
+
+        return ExerciseDoneWithPagination(
+            count=count_exercises,
+            response=exercises
+        )
 
     def delete(self, exercise_done: ExerciseDone) -> bool:
         self.db.delete(exercise_done)

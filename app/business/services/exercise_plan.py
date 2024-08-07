@@ -10,7 +10,7 @@ class ExercisePlanService:
     exercisePlanRepository: ExercisePlanRepository
 
     def __init__(self, exercisePlanRepository: ExercisePlanRepository = Depends()) -> None:
-        self.exercisePlanRepository = ExercisePlanRepository
+        self.exercisePlanRepository = exercisePlanRepository
 
     def create(self, exercise_plan_body: ExercisePlanCreate) -> ExercisePlan:
         return self.exercisePlanRepository.create(ExercisePlan(exercise_id = exercise_plan_body.exercise_id,
@@ -47,11 +47,3 @@ class ExercisePlanService:
             raise NotFoundException()
 
         return self.exercisePlanRepository.delete(exercise_plan)
-
-    # def list(self, workout_plan_id: int, skip: Optional[int] = 0, limit: Optional[int] = 10) -> List[ExercisePlanWithName]:
-    #     exercise_plan_list = self.exercisePlanRepository.list(workout_plan_id, skip, limit)
-
-    #     if len(exercise_plan_list) == 0:
-    #         raise NotFoundException()
-
-    #     return exercise_plan_list

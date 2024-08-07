@@ -1,6 +1,6 @@
 from fastapi import Depends
 from core.models.workout_done import WorkoutDone
-from core.schemas.workout_done import WorkoutDoneCreate, WorkoutDoneUpdate
+from core.schemas.workout_done import WorkoutDoneCreate, WorkoutDoneUpdate, WorkoutDoneWithPagination
 from infrastructure.repositories.workout_done import WorkoutDoneRepository
 from business.services.exceptions import NotFoundException, BadRequestException
 from typing import List, Optional
@@ -43,10 +43,10 @@ class WorkoutDoneService:
 
         return self.workoutDoneRepository.delete(workout_done)
 
-    def list(self, user_id: int, skip: Optional[int] = 0, limit: Optional[int] = 10) -> List[WorkoutDone]:
-        workout_list = self.workoutDoneRepository.list(user_id, skip, limit)
+    def list(self, user_id: int, skip: Optional[int] = 0, limit: Optional[int] = 10) -> WorkoutDoneWithPagination:
+        response = self.workoutDoneRepository.list(user_id, skip, limit)
 
-        if len(workout_list) == 0:
+        if len(response.workouts_done) == 0:
             raise NotFoundException()
 
-        return workout_list
+        return response

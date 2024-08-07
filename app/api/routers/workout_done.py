@@ -4,7 +4,7 @@ from typing import List, Optional
 from business.services.auth import AuthService
 from business.services.workout_done import WorkoutDoneService
 from business.services.exceptions import NotFoundException, BadRequestException
-from core.schemas.workout_done import WorkoutDoneCreate, WorkoutDoneUpdate, WorkoutDone, WorkoutDoneWithName
+from core.schemas.workout_done import WorkoutDoneCreate, WorkoutDoneUpdate, WorkoutDone, WorkoutDoneWithName, WorkoutDoneWithPagination
 
 WorkoutDoneRouter = APIRouter(
     prefix='/workout-done', tags=['workout-done']
@@ -20,11 +20,11 @@ def get(workout_done_id: int, workout_done_service: WorkoutDoneService = Depends
         raise HTTPException(status_code=404, detail="Registro não encontrado.")
 
 
-@WorkoutDoneRouter.get("", response_model=List[WorkoutDoneWithName])
+@WorkoutDoneRouter.get("", response_model=WorkoutDoneWithPagination)
 def list(user_id: int, skip: Optional[int] = 0, limit: Optional[int] = 10, workout_done_service: WorkoutDoneService = Depends()):
     try:
-        workout_done = workout_done_service.list(user_id, skip, limit)
-        return workout_done
+        response = workout_done_service.list(user_id, skip, limit)
+        return response
     except NotFoundException:
         raise HTTPException(status_code=404, detail="Nenhum registro associado ao usuário.")
 

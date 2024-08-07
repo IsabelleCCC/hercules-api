@@ -7,3 +7,4 @@ class Exercise(Base):
     __tablename__ = 'Exercise'
     id = Column(Integer, primary_key=True)
     name = Column(String(45), nullable=False)
+    muscle_group = Column(String(45), nullable=False)

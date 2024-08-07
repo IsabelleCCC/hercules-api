@@ -1,5 +1,5 @@
 from fastapi import Depends
-from core.schemas.exercise_done import ExerciseDoneCreate, ExerciseDone, ExerciseDoneWithName
+from core.schemas.exercise_done import ExerciseDoneByUser, ExerciseDoneCreate, ExerciseDone, ExerciseDoneWithName, ExerciseDoneWithPagination
 from infrastructure.repositories.exercise_done import ExerciseDoneRepository
 from business.services.exceptions import NotFoundException
 from typing import List, Optional
@@ -26,8 +26,16 @@ class ExerciseDoneService:
 
         return self.exerciseDoneRepository.delete(exercise_plan)
 
-    def list(self, workout_done_id: int, skip: Optional[int] = 0, limit: Optional[int] = 10) -> List[ExerciseDoneWithName]:
-        exercise_done_list = self.exerciseDoneRepository.list(workout_done_id, skip, limit)
+    def list_by_workout_done(self, workout_done_id: int, skip: Optional[int] = 0, limit: Optional[int] = 10) -> List[ExerciseDoneWithName]:
+        exercise_done_list = self.exerciseDoneRepository.list_by_workout_done(workout_done_id, skip, limit)
+
+        if len(exercise_done_list) == 0:
+            raise NotFoundException()
+
+        return exercise_done_list
+
+    def list_by_user_id(self, user_id: int, skip: Optional[int] = 0, limit: Optional[int] = 10) -> List[ExerciseDoneWithPagination]:
+        exercise_done_list = self.exerciseDoneRepository.list_by_user_id(user_id, skip, limit)
 
         if len(exercise_done_list) == 0:
             raise NotFoundException()
